@@ -66,6 +66,17 @@ export const parseGraphqlQuery = (queryString: any) => {
   `
 }
 
+const decodeBody = (requestBody: string): any => {
+  const multiQueriesMatch = requestBody.match(/^multi_queries=(.*)/)
+
+  if (multiQueriesMatch) {
+    const decodedQueries = decodeURIComponent(multiQueriesMatch[1])
+    return JSON.parse(decodedQueries)
+  }
+
+  return JSON.parse(requestBody)
+}
+
 /**
  * Parse the body of a GraphQL request into an array of
  * request payloads.
@@ -81,7 +92,7 @@ export const parseGraphqlBody = (
   body: string
 ): IGraphqlRequestBody[] | undefined => {
   try {
-    const requestPayload = JSON.parse(body)
+    const requestPayload = decodeBody(body)
     const requestPayloads = Array.isArray(requestPayload)
       ? requestPayload
       : [requestPayload]

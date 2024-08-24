@@ -251,6 +251,12 @@ const getRequestBodyFromWebRequestBodyDetails = (
     return JSON.stringify(res)
   }
 
+  if (details.requestBody?.formData?.multi_queries) {
+    return `multi_queries=${encodeURIComponent(
+      details.requestBody.formData.multi_queries[0]
+    )}`
+  }
+
   return body
 }
 
